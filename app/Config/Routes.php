@@ -73,4 +73,9 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'ad
     $routes->get('reportes/ventas', 'Reportes::ventas');
     $routes->get('reportes/productos', 'Reportes::productos');
     $routes->get('reportes/exportar/(:segment)', 'Reportes::exportar/$1');
+
+
+    // Perfil
+    $routes->get('perfil', 'Perfil::index');
+    $routes->post('perfil/actualizar', 'Perfil::actualizar');
 });

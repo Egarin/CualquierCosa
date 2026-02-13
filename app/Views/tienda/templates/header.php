@@ -199,6 +199,12 @@
                                 <span><?= explode(' ', session()->get('nombre'))[0] ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <?php if (session()->get('rol') === 'admin'): ?>
+                                    <li><a class="dropdown-item text-primary" href="<?= base_url('admin/dashboard') ?>"><i class="bi bi-speedometer2 me-2"></i>Panel Admin</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                <?php endif; ?>
                                 <li><a class="dropdown-item" href="<?= base_url('mis-pedidos') ?>"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
                                 <li>
                                     <hr class="dropdown-divider">

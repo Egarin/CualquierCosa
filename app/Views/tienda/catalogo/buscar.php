@@ -202,7 +202,7 @@
                         <?php foreach ($categorias as $cat): ?>
                             <a href="<?= base_url('catalogo/categoria/' . $cat['slug']) ?>" class="filter-link">
                                 <i class="bi <?= $cat['icono'] ?? 'bi-tag' ?>"></i>
-                                <?= $cat['nombre'] ?>
+                                <?= $cat['nombre'] ?> (<?= $cat['total_productos'] ?>)
                             </a>
                         <?php endforeach; ?>
                     <?php endif; ?>
