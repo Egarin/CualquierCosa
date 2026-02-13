@@ -21,7 +21,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="card-title mb-0">Total Ventas</h6>
-                        <h2 class="mt-2 mb-0">S/ <?= number_format($stats['total_ventas'], 2) ?></h2>
+                        <h2 class="mt-2 mb-0">Gs. <?= number_format($stats['total_ventas'], 0) ?></h2>
                     </div>
                     <i class="ti ti-currency-dollar fs-1 opacity-50"></i>
                 </div>
@@ -35,7 +35,7 @@
                     <div>
                         <h6 class="card-title mb-0">Ticket Promedio</h6>
                         <h2 class="mt-2 mb-0">
-                            S/ <?= $stats['total_pedidos'] > 0 ? number_format($stats['total_ventas'] / $stats['total_pedidos'], 2) : '0.00' ?>
+                            Gs. <?= $stats['total_pedidos'] > 0 ? number_format($stats['total_ventas'] / $stats['total_pedidos'], 0) : '0' ?>
                         </h2>
                     </div>
                     <i class="ti ti-receipt fs-1 opacity-50"></i>

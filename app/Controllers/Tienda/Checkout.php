@@ -24,16 +24,16 @@ class Checkout extends BaseController
         $this->detallePedidoModel = new DetallePedidoModel();
         $this->productoModel = new ProductoModel();
         $this->direccionModel = new DireccionModel();
-        helper(['form']);
+        helper(['form', 'text']);
     }
 
     public function index()
     {
         $usuarioId = session()->get('usuario_id');
         $sessionId = session()->get('session_id');
-        
+
         $items = $this->carritoModel->getCarrito($usuarioId, $sessionId);
-        
+
         if (empty($items)) {
             return redirect()->to('carrito')->with('error', 'Tu carrito está vacío');
         }
@@ -53,9 +53,9 @@ class Checkout extends BaseController
     {
         $usuarioId = session()->get('usuario_id');
         $sessionId = session()->get('session_id');
-        
+
         $items = $this->carritoModel->getCarrito($usuarioId, $sessionId);
-        
+
         if (empty($items)) {
             return redirect()->to('carrito')->with('error', 'Tu carrito está vacío');
         }
@@ -100,7 +100,7 @@ class Checkout extends BaseController
         // Insertar detalles y actualizar stock
         foreach ($items as $item) {
             $precio = $item['precio_oferta'] ?? $item['precio'];
-            
+
             $detalleData = [
                 'pedido_id' => $pedidoId,
                 'producto_id' => $item['producto_id'],
@@ -108,9 +108,9 @@ class Checkout extends BaseController
                 'precio_unitario' => $precio,
                 'subtotal' => $precio * $item['cantidad']
             ];
-            
+
             $this->detallePedidoModel->insert($detalleData);
-            
+
             // Actualizar stock
             $this->productoModel->actualizarStock($item['producto_id'], $item['cantidad'], 'restar');
         }
@@ -130,7 +130,7 @@ class Checkout extends BaseController
     public function confirmacion($codigo)
     {
         $pedido = $this->pedidoModel->where('codigo', $codigo)->first();
-        
+
         if (!$pedido || $pedido['usuario_id'] != session()->get('usuario_id')) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }

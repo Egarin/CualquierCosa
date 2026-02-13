@@ -239,11 +239,11 @@
                 <div class="mb-4">
                     <?php if ($producto['precio_oferta']): ?>
                         <div class="d-flex align-items-end">
-                            <span class="price-large">S/ <?= number_format($producto['precio_oferta'], 2) ?></span>
-                            <span class="price-old-large">S/ <?= number_format($producto['precio'], 2) ?></span>
+                            <span class="price-large">Gs. <?= number_format($producto['precio_oferta'], 0) ?></span>
+                            <span class="price-old-large">Gs. <?= number_format($producto['precio'], 0) ?></span>
                         </div>
                     <?php else: ?>
-                        <span class="price-large">S/ <?= number_format($producto['precio'], 2) ?></span>
+                        <span class="price-large">Gs. <?= number_format($producto['precio'], 0) ?></span>
                     <?php endif; ?>
                 </div>
 
@@ -256,25 +256,25 @@
                     <div>
                         <label class="fw-bold text-dark mb-2 d-block">Cantidad</label>
                         <div class="quantity-selector">
-                            <button class="quantity-btn" type="button" onclick="updateQty(-1)">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="<?= $producto['stock'] ?>" id="cantidad">
-                            <button class="quantity-btn" type="button" onclick="updateQty(1)">+</button>
+                            <button class="quantity-btn" type="button" onclick="updateQty(-1)" <?= $producto['stock'] <= 0 ? 'disabled' : '' ?>>-</button>
+                            <input type="number" class="quantity-input" value="<?= $producto['stock'] > 0 ? 1 : 0 ?>" min="1" max="<?= $producto['stock'] ?>" id="cantidad" <?= $producto['stock'] <= 0 ? 'disabled' : '' ?>>
+                            <button class="quantity-btn" type="button" onclick="updateQty(1)" <?= $producto['stock'] <= 0 ? 'disabled' : '' ?>>+</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Actions -->
                 <div class="d-flex gap-3">
-                    <button class="btn-buy-now flex-grow-1" onclick="comprarAhora()">
+                    <button class="btn-buy-now flex-grow-1" onclick="comprarAhora()" <?= $producto['stock'] <= 0 ? 'disabled' : '' ?>>
                         Comprar Ahora
                     </button>
-                    <button class="btn-add-cart-detail flex-grow-1" onclick="agregarAlCarrito(<?= $producto['id'] ?>, document.getElementById('cantidad').value)">
+                    <button class="btn-add-cart-detail flex-grow-1" onclick="agregarAlCarrito(<?= $producto['id'] ?>, document.getElementById('cantidad').value)" <?= $producto['stock'] <= 0 ? 'disabled' : '' ?>>
                         <i class="bi bi-bag-plus me-2"></i>Agregar al Carrito
                     </button>
                 </div>
 
                 <div class="mt-4 pt-3 border-top border-light text-muted small">
-                    <div class="mb-2"><i class="bi bi-truck me-2"></i>Envío gratis en pedidos mayores a S/ 100.00</div>
+                    <div class="mb-2"><i class="bi bi-truck me-2"></i>Envío gratis en pedidos mayores a Gs. 100.000</div>
                     <div><i class="bi bi-shield-check me-2"></i>Garantía de devolución de 30 días.</div>
                 </div>
             </div>
@@ -357,7 +357,7 @@
                                 </a>
                             </h6>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <span class="fw-bold text-dark">S/ <?= number_format($rel['precio_oferta'] ?? $rel['precio'], 2) ?></span>
+                                <span class="fw-bold text-dark">Gs. <?= number_format($rel['precio_oferta'] ?? $rel['precio'], 0) ?></span>
                                 <a href="<?= base_url('producto/' . $rel['slug']) ?>" class="btn btn-outline-primary btn-sm rounded-pill p-1 px-2">
                                     <i class="bi bi-arrow-right"></i>
                                 </a>
@@ -371,22 +371,31 @@
 </div>
 
 <script>
+    const maxStock = <?= $producto['stock'] ?>;
+
     function updateQty(change) {
+        if (maxStock <= 0) return;
+
         const input = document.getElementById('cantidad');
         let val = parseInt(input.value) + change;
         if (val < 1) val = 1;
-        if (val > <?= $producto['stock'] ?>) val = <?= $producto['stock'] ?>;
+        if (val > maxStock) val = maxStock;
         input.value = val;
     }
 
     function comprarAhora() {
+        if (maxStock <= 0) return;
+
         const id = <?= $producto['id'] ?>;
         const qty = document.getElementById('cantidad').value;
+        const csrfToken = '<?= csrf_token() ?>';
+        const csrfHash = document.getElementById('csrf-token').content;
 
         // Agregar al carrito y redirigir
         const formData = new FormData();
         formData.append('producto_id', id);
         formData.append('cantidad', qty);
+        formData.append(csrfToken, csrfHash);
 
         fetch(BASE_URL + 'carrito/agregar', {
                 method: 'POST',
@@ -399,8 +408,22 @@
             .then(data => {
                 if (data.success) {
                     window.location.href = BASE_URL + 'checkout';
+                } else {
+                    // Show Error Toast (reusing header toast if available, or alert)
+                    const errorToastBody = document.getElementById('errorToastBody');
+                    if (errorToastBody) {
+                        errorToastBody.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>' + (data.message || 'Error al procesar compra');
+                        const errorToastEl = document.getElementById('errorToast');
+                        if (errorToastEl) {
+                            const toast = new bootstrap.Toast(errorToastEl);
+                            toast.show();
+                        }
+                    } else {
+                        alert(data.message || 'Error al procesar compra');
+                    }
                 }
-            });
+            })
+            .catch(error => console.error('Error:', error));
     }
 </script>
 

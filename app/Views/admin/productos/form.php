@@ -48,16 +48,16 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Precio Normal</label>
                             <div class="input-group">
-                                <span class="input-group-text">S/</span>
-                                <input type="number" step="0.01" name="precio" class="form-control"
+                                <span class="input-group-text">Gs.</span>
+                                <input type="number" step="1" name="precio" class="form-control"
                                     value="<?= old('precio', $producto['precio'] ?? '') ?>" required>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Precio Oferta</label>
                             <div class="input-group">
-                                <span class="input-group-text">S/</span>
-                                <input type="number" step="0.01" name="precio_oferta" class="form-control"
+                                <span class="input-group-text">Gs.</span>
+                                <input type="number" step="1" name="precio_oferta" class="form-control"
                                     value="<?= old('precio_oferta', $producto['precio_oferta'] ?? '') ?>">
                             </div>
                         </div>

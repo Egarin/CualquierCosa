@@ -299,10 +299,10 @@
                                     <div class="d-flex align-items-center justify-content-between mt-2">
                                         <div>
                                             <?php if ($prod['precio_oferta']): ?>
-                                                <span class="mat-product-price">S/ <?= number_format($prod['precio_oferta'], 2) ?></span>
-                                                <span class="mat-product-price-old">S/ <?= number_format($prod['precio'], 2) ?></span>
+                                                <span class="mat-product-price">Gs. <?= number_format($prod['precio_oferta'], 0) ?></span>
+                                                <span class="mat-product-price-old">Gs. <?= number_format($prod['precio'], 0) ?></span>
                                             <?php else: ?>
-                                                <span class="mat-product-price">S/ <?= number_format($prod['precio'], 2) ?></span>
+                                                <span class="mat-product-price">Gs. <?= number_format($prod['precio'], 0) ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <div class="rating-stars">

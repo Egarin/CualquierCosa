@@ -45,10 +45,10 @@
                             </td>
                             <td>
                                 <?php if ($prod['precio_oferta']): ?>
-                                    <span class="text-decoration-line-through text-muted">S/ <?= number_format($prod['precio'], 2) ?></span><br>
-                                    <span class="text-danger fw-bold">S/ <?= number_format($prod['precio_oferta'], 2) ?></span>
+                                    <span class="text-decoration-line-through text-muted">Gs. <?= number_format($prod['precio'], 0) ?></span><br>
+                                    <span class="text-danger fw-bold">Gs. <?= number_format($prod['precio_oferta'], 0) ?></span>
                                 <?php else: ?>
-                                    S/ <?= number_format($prod['precio'], 2) ?>
+                                    Gs. <?= number_format($prod['precio'], 0) ?>
                                 <?php endif; ?>
                             </td>
                             <td>

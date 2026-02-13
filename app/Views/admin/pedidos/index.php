@@ -34,7 +34,7 @@
                                 <small class="text-muted"><?= $ped['cliente_email'] ?></small>
                             </td>
                             <td><?= date('d/m/Y H:i', strtotime($ped['created_at'])) ?></td>
-                            <td class="fw-bold">S/ <?= number_format($ped['total'], 2) ?></td>
+                            <td class="fw-bold">Gs. <?= number_format($ped['total'], 0) ?></td>
                             <td>
                                 <span class="badge bg-<?= $ped['tipo_envio'] == 'delivery' ? 'primary' : 'secondary' ?>">
                                     <?= ucfirst($ped['tipo_envio']) ?>

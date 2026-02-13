@@ -52,7 +52,7 @@
                                 <tr>
                                     <td>#<?= $ped['codigo'] ?></td>
                                     <td><?= date('d/m/Y H:i', strtotime($ped['created_at'])) ?></td>
-                                    <td>S/ <?= number_format($ped['total'], 2) ?></td>
+                                    <td>Gs. <?= number_format($ped['total'], 0) ?></td>
                                     <td>
                                         <span class="badge bg-<?=
                                                                 $ped['estado'] == 'entregado' ? 'success' : ($ped['estado'] == 'cancelado' ? 'danger' : 'warning')

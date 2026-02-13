@@ -29,7 +29,7 @@
                         <h5 class="card-title mb-9 fw-semibold">Ventas de Hoy</h5>
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h4 class="fw-semibold mb-3">S/ <?= number_format($stats_hoy['total_ventas'], 2) ?></h4>
+                                <h4 class="fw-semibold mb-3">Gs. <?= number_format($stats_hoy['total_ventas'], 0) ?></h4>
                                 <div class="d-flex align-items-center mb-3">
                                     <span class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
                                         <i class="ti ti-arrow-up-left text-success"></i>
@@ -107,7 +107,7 @@
                                         <span class="fw-normal"><?= $pedido['cliente_email'] ?></span>
                                     </td>
                                     <td class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0 fs-4">S/ <?= number_format($pedido['total'], 2) ?></h6>
+                                        <h6 class="fw-semibold mb-0 fs-4">Gs. <?= number_format($pedido['total'], 0) ?></h6>
                                     </td>
                                     <td class="border-bottom-0">
                                         <span class="badge bg-warning rounded-3 fw-semibold"><?= ucfirst($pedido['estado']) ?></span>
@@ -158,7 +158,7 @@
     // Gráfico de ventas
     var options = {
         series: [{
-            name: 'Ventas S/',
+            name: 'Ventas Gs.',
             data: [<?= implode(',', array_column($ventas_diarias, 'total')) ?>]
         }],
         chart: {

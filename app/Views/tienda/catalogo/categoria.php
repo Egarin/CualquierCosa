@@ -28,29 +28,29 @@
     <?php else: ?>
         <div class="row g-4">
             <?php foreach ($productos as $prod): ?>
-            <div class="col-md-6 col-lg-3">
-                <div class="product-card position-relative">
-                    <img src="<?= $prod['imagen'] ? base_url('uploads/productos/' . $prod['imagen']) : base_url('assets/images/no-image.jpg') ?>" 
-                         class="product-img w-100" alt="<?= $prod['nombre'] ?>">
-                    
-                    <div class="card-body p-3">
-                        <h5 class="card-title mt-1 mb-2"><?= character_limiter($prod['nombre'], 35) ?></h5>
-                        
-                        <div class="d-flex align-items-center mb-3">
-                            <?php if ($prod['precio_oferta']): ?>
-                                <span class="price-original me-2">S/ <?= number_format($prod['precio'], 2) ?></span>
-                                <span class="price-tag">S/ <?= number_format($prod['precio_oferta'], 2) ?></span>
-                            <?php else: ?>
-                                <span class="price-tag">S/ <?= number_format($prod['precio'], 2) ?></span>
-                            <?php endif; ?>
+                <div class="col-md-6 col-lg-3">
+                    <div class="product-card position-relative">
+                        <img src="<?= $prod['imagen'] ? base_url('uploads/productos/' . $prod['imagen']) : base_url('assets/images/no-image.jpg') ?>"
+                            class="product-img w-100" alt="<?= $prod['nombre'] ?>">
+
+                        <div class="card-body p-3">
+                            <h5 class="card-title mt-1 mb-2"><?= character_limiter($prod['nombre'], 35) ?></h5>
+
+                            <div class="d-flex align-items-center mb-3">
+                                <?php if ($prod['precio_oferta']): ?>
+                                    <span class="price-original me-2">Gs. <?= number_format($prod['precio'], 0) ?></span>
+                                    <span class="price-tag">Gs. <?= number_format($prod['precio_oferta'], 0) ?></span>
+                                <?php else: ?>
+                                    <span class="price-tag">Gs. <?= number_format($prod['precio'], 0) ?></span>
+                                <?php endif; ?>
+                            </div>
+
+                            <button class="btn btn-primary btn-add-cart w-100" onclick="agregarAlCarrito(<?= $prod['id'] ?>)">
+                                <i class="bi bi-cart-plus me-2"></i>Agregar
+                            </button>
                         </div>
-                        
-                        <button class="btn btn-primary btn-add-cart w-100" onclick="agregarAlCarrito(<?= $prod['id'] ?>)">
-                            <i class="bi bi-cart-plus me-2"></i>Agregar
-                        </button>
                     </div>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>

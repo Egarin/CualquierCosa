@@ -40,14 +40,14 @@
                         <h5 class="card-title mb-3">Dirección de Entrega</h5>
                         <?php if (!empty($direcciones)): ?>
                             <?php foreach ($direcciones as $dir): ?>
-                            <div class="form-check card p-3 mb-2">
-                                <input class="form-check-input" type="radio" name="direccion_id" value="<?= $dir['id'] ?>" id="dir<?= $dir['id'] ?>" <?= $dir['es_principal'] ? 'checked' : '' ?>>
-                                <label class="form-check-label" for="dir<?= $dir['id'] ?>">
-                                    <strong><?= $dir['alias'] ?: 'Dirección' ?></strong>
-                                    <?php if ($dir['es_principal']): ?><span class="badge bg-primary ms-2">Principal</span><?php endif; ?>
-                                    <p class="mb-0 text-muted"><?= $dir['direccion'] ?></p>
-                                </label>
-                            </div>
+                                <div class="form-check card p-3 mb-2">
+                                    <input class="form-check-input" type="radio" name="direccion_id" value="<?= $dir['id'] ?>" id="dir<?= $dir['id'] ?>" <?= $dir['es_principal'] ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="dir<?= $dir['id'] ?>">
+                                        <strong><?= $dir['alias'] ?: 'Dirección' ?></strong>
+                                        <?php if ($dir['es_principal']): ?><span class="badge bg-primary ms-2">Principal</span><?php endif; ?>
+                                        <p class="mb-0 text-muted"><?= $dir['direccion'] ?></p>
+                                    </label>
+                                </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <div class="alert alert-warning">
@@ -103,32 +103,32 @@
                 <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Resumen</h5>
-                        
-                        <?php foreach ($items as $item): 
+
+                        <?php foreach ($items as $item):
                             $precio = $item['precio_oferta'] ?? $item['precio'];
                         ?>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted"><?= character_limiter($item['nombre'], 20) ?> x<?= $item['cantidad'] ?></span>
-                            <span>S/ <?= number_format($precio * $item['cantidad'], 2) ?></span>
-                        </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted"><?= character_limiter($item['nombre'], 20) ?> x<?= $item['cantidad'] ?></span>
+                                <span>Gs. <?= number_format($precio * $item['cantidad'], 0) ?></span>
+                            </div>
                         <?php endforeach; ?>
 
                         <hr>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal</span>
-                            <span>S/ <?= number_format($subtotal, 2) ?></span>
+                            <span>Gs. <?= number_format($subtotal, 0) ?></span>
                         </div>
                         <div class="d-flex justify-content-between mb-2" id="costo-envio">
                             <span>Envío</span>
-                            <span id="monto-envio">S/ <?= number_format($costo_envio, 2) ?></span>
+                            <span id="monto-envio">Gs. <?= number_format($costo_envio, 0) ?></span>
                         </div>
 
                         <hr>
 
                         <div class="d-flex justify-content-between mb-4">
                             <span class="h5">Total</span>
-                            <span class="h5 text-primary" id="total-pedido">S/ <?= number_format($subtotal + $costo_envio, 2) ?></span>
+                            <span class="h5 text-primary" id="total-pedido">Gs. <?= number_format($subtotal + $costo_envio, 0) ?></span>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100 btn-lg">
@@ -142,22 +142,22 @@
 </div>
 
 <script>
-function toggleDireccion(mostrar) {
-    const seccion = document.getElementById('seccion-direccion');
-    const montoEnvio = document.getElementById('monto-envio');
-    const totalPedido = document.getElementById('total-pedido');
-    const subtotal = <?= $subtotal ?>;
-    const costoEnvio = <?= $costo_envio ?>;
+    function toggleDireccion(mostrar) {
+        const seccion = document.getElementById('seccion-direccion');
+        const montoEnvio = document.getElementById('monto-envio');
+        const totalPedido = document.getElementById('total-pedido');
+        const subtotal = <?= $subtotal ?>;
+        const costoEnvio = <?= $costo_envio ?>;
 
-    if (mostrar) {
-        seccion.style.display = 'block';
-        montoEnvio.textContent = 'S/ ' + costoEnvio.toFixed(2);
-        totalPedido.textContent = 'S/ ' + (subtotal + costoEnvio).toFixed(2);
-    } else {
-        seccion.style.display = 'none';
-        montoEnvio.textContent = 'Gratis';
-        totalPedido.textContent = 'S/ ' + subtotal.toFixed(2);
+        if (mostrar) {
+            seccion.style.display = 'block';
+            montoEnvio.textContent = 'Gs. ' + Math.round(costoEnvio);
+            totalPedido.textContent = 'Gs. ' + Math.round(subtotal + costoEnvio);
+        } else {
+            seccion.style.display = 'none';
+            montoEnvio.textContent = 'Gratis';
+            totalPedido.textContent = 'Gs. ' + Math.round(subtotal);
+        }
     }
-}
 </script>
 <?= $this->endSection() ?>

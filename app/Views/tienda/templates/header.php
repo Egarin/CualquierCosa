@@ -13,6 +13,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- CSRF Token -->
+    <meta name="<?= csrf_token() ?>" content="<?= csrf_hash() ?>" id="csrf-token">
+
     <style>
         :root {
             --primary-color: #0d6efd;
@@ -216,12 +219,21 @@
         </div>
     </nav>
 
-    <!-- Toast Notification -->
+    <!-- Toast Notification Success -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert">
             <div class="d-flex">
                 <div class="toast-body">
                     <i class="bi bi-check-circle me-2"></i>Producto agregado al carrito
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        <!-- Toast Notification Error -->
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="errorToastBody">
+                    <i class="bi bi-exclamation-circle me-2"></i>Error al agregar
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
@@ -235,3 +247,85 @@
 
     <!-- Footer -->
     <?= $this->include('tienda/templates/footer') ?>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const BASE_URL = '<?= base_url() ?>';
+        const CSRF_TOKEN = '<?= csrf_token() ?>';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!window.location.href.includes('login') && !window.location.href.includes('registro')) {
+                actualizarContadorCarrito();
+            }
+        });
+
+        function getCsrfHash() {
+            return document.getElementById('csrf-token').content;
+        }
+
+        function agregarAlCarrito(productoId, cantidad = 1) {
+            const formData = new FormData();
+            formData.append('producto_id', productoId);
+            formData.append('cantidad', cantidad);
+            formData.append(CSRF_TOKEN, getCsrfHash());
+
+            fetch(BASE_URL + 'carrito/agregar', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const cartCount = document.getElementById('cart-count');
+                        if (cartCount) cartCount.textContent = data.contador;
+
+                        const toastEl = document.getElementById('liveToast');
+                        if (toastEl) {
+                            const toast = new bootstrap.Toast(toastEl);
+                            toast.show();
+                        }
+                    } else {
+                        // Show Error Toast
+                        const errorToastBody = document.getElementById('errorToastBody');
+                        if (errorToastBody) errorToastBody.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>' + (data.message || 'Error al agregar al carrito');
+
+                        const errorToastEl = document.getElementById('errorToast');
+                        if (errorToastEl) {
+                            const toast = new bootstrap.Toast(errorToastEl);
+                            toast.show();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function actualizarContadorCarrito() {
+            fetch(BASE_URL + 'carrito/contador')
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        const cartCount = document.getElementById('cart-count');
+                        if (cartCount) cartCount.textContent = data.contador || 0;
+                    } catch (e) {
+                        // Silenciar error si no es JSON válido
+                    }
+                })
+                .catch(error => {
+                    // Silenciar error de conexión
+                });
+        }
+    </script>
+</body>
+
+</html>

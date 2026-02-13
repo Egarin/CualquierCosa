@@ -34,7 +34,7 @@
                                         <?= $prod['total_vendido'] ?> Unidades
                                     </span>
                                 </td>
-                                <td>S/ <?= number_format($prod['total_ingresos'], 2) ?></td>
+                                <td>Gs. <?= number_format($prod['total_ingresos'], 0) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

@@ -7,10 +7,10 @@
             <div class="mb-4">
                 <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
             </div>
-            
+
             <h1 class="mb-3">¡Pedido Confirmado!</h1>
             <p class="lead text-muted mb-4">Gracias por tu compra. Hemos recibido tu pedido correctamente.</p>
-            
+
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Detalles del Pedido</h5>
@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-md-6 text-md-start">
                             <p class="mb-1 text-muted">Total:</p>
-                            <h4>S/ <?= number_format($pedido['total'], 2) ?></h4>
+                            <h4>Gs. <?= number_format($pedido['total'], 0) ?></h4>
                         </div>
                     </div>
                     <hr>

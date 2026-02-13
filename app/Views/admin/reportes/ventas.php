@@ -37,7 +37,7 @@
                             <tr>
                                 <td><?= date('d/m/Y', strtotime($venta['fecha'])) ?></td>
                                 <td><?= $venta['cantidad'] ?></td>
-                                <td>S/ <?= number_format($venta['total'], 2) ?></td>
+                                <td>Gs. <?= number_format($venta['total'], 0) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

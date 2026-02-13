@@ -37,7 +37,7 @@
                             <td>
                                 <span class="badge bg-info"><?= $cli['total_pedidos'] ?></span>
                             </td>
-                            <td>S/ <?= number_format($cli['total_gastado'] ?? 0, 2) ?></td>
+                            <td>Gs. <?= number_format($cli['total_gastado'] ?? 0, 0) ?></td>
                             <td><?= date('d/m/Y', strtotime($cli['created_at'])) ?></td>
                             <td>
                                 <a href="<?= base_url('admin/clientes/ver/' . $cli['id']) ?>" class="btn btn-sm btn-primary">

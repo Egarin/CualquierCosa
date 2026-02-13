@@ -13,10 +13,9 @@
                             <?= date('d/m/Y H:i', strtotime($pedido['created_at'])) ?>
                         </p>
                     </div>
-                    <span class="badge bg-<?= 
-                        $pedido['estado'] == 'entregado' ? 'success' : 
-                        ($pedido['estado'] == 'cancelado' ? 'danger' : 'warning') 
-                    ?> fs-6 px-3 py-2">
+                    <span class="badge bg-<?=
+                                            $pedido['estado'] == 'entregado' ? 'success' : ($pedido['estado'] == 'cancelado' ? 'danger' : 'warning')
+                                            ?> fs-6 px-3 py-2">
                         <?= ucfirst($pedido['estado']) ?>
                     </span>
                 </div>
@@ -34,34 +33,38 @@
                         </thead>
                         <tbody>
                             <?php foreach ($pedido['detalles'] as $det): ?>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img src="<?= $det['imagen'] ? base_url('uploads/productos/' . $det['imagen']) : base_url('assets/images/no-image.jpg') ?>" 
-                                             class="rounded" width="40" height="40" style="object-fit: cover;">
-                                        <span class="ms-2"><?= $det['producto_nombre'] ?></span>
-                                    </div>
-                                </td>
-                                <td class="text-center"><?= $det['cantidad'] ?></td>
-                                <td class="text-end">S/ <?= number_format($det['precio_unitario'], 2) ?></td>
-                                <td class="text-end">S/ <?= number_format($det['subtotal'], 2) ?></td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="<?= $det['imagen'] ? base_url('uploads/productos/' . $det['imagen']) : base_url('assets/images/no-image.jpg') ?>"
+                                                class="rounded" width="40" height="40" style="object-fit: cover;">
+                                            <span class="ms-2"><?= $det['producto_nombre'] ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="text-center"><?= $det['cantidad'] ?></td>
+                                    <td class="text-end">Gs. <?= number_format($det['precio_unitario'], 0) ?></td>
+                                    <td class="text-end">Gs. <?= number_format($det['subtotal'], 0) ?></td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot class="table-group-divider">
                             <tr>
                                 <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
-                                <td class="text-end">S/ <?= number_format($pedido['subtotal'], 2) ?></td>
+                                <td class="text-end">Gs. <?= number_format($pedido['subtotal'], 0) ?></td>
                             </tr>
                             <?php if ($pedido['costo_envio'] > 0): ?>
-                            <tr>
-                                <td colspan="3" class="text-end"><strong>Envío:</strong></td>
-                                <td class="text-end">S/ <?= number_format($pedido['costo_envio'], 2) ?></td>
-                            </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Envío:</strong></td>
+                                    <td class="text-end">Gs. <?= number_format($pedido['costo_envio'], 0) ?></td>
+                                </tr>
                             <?php endif; ?>
                             <tr>
-                                <td colspan="3" class="text-end"><h5 class="mb-0">Total:</h5></td>
-                                <td class="text-end"><h5 class="mb-0 text-primary">S/ <?= number_format($pedido['total'], 2) ?></h5></td>
+                                <td colspan="3" class="text-end">
+                                    <h5 class="mb-0">Total:</h5>
+                                </td>
+                                <td class="text-end">
+                                    <h5 class="mb-0 text-primary">Gs. <?= number_format($pedido['total'], 0) ?></h5>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -89,13 +92,13 @@
                     </span>
                 </p>
                 <?php if ($pedido['tipo_envio'] == 'delivery' && $pedido['direccion']): ?>
-                <p class="mb-1"><strong>Dirección:</strong></p>
-                <p class="text-muted"><?= $pedido['direccion'] ?></p>
-                <?php if ($pedido['referencia']): ?>
-                <p class="small text-muted"><strong>Ref:</strong> <?= $pedido['referencia'] ?></p>
-                <?php endif; ?>
+                    <p class="mb-1"><strong>Dirección:</strong></p>
+                    <p class="text-muted"><?= $pedido['direccion'] ?></p>
+                    <?php if ($pedido['referencia']): ?>
+                        <p class="small text-muted"><strong>Ref:</strong> <?= $pedido['referencia'] ?></p>
+                    <?php endif; ?>
                 <?php else: ?>
-                <p class="text-muted">Retiro en tienda</p>
+                    <p class="text-muted">Retiro en tienda</p>
                 <?php endif; ?>
             </div>
         </div>
