@@ -1,6 +1,7 @@
 <?= $this->extend('tienda/templates/header') ?>
 
 <?= $this->section('content') ?>
+<?php $precio = $producto['precio_oferta'] ?: $producto['precio']; ?>
 <style>
     body {
         background-color: #f5f8fa;
@@ -316,6 +317,21 @@
                                 <p class="text-muted small mb-0">Excelente producto, llegó muy rápido y en perfectas condiciones.</p>
                             </div>
                         </div>
+                        <div class="col-12 mb-4">
+                            <div class="price-section p-3 rounded-4 bg-light">
+                                <div class="d-flex align-items-center mb-1">
+                                    <h3 class="text-primary fw-bold mb-0"><?= formato_moneda($precio) ?></h3>
+                                    <?php if ($producto['precio_oferta']): ?>
+                                        <span class="text-muted text-decoration-line-through ms-2">
+                                            <?= formato_moneda($producto['precio']) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="text-success small fw-semibold">
+                                    <i class="bi bi-tag-fill me-1"></i>Precio con IVA incluido
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-flex mb-4">
                             <div class="bg-light rounded-circle p-3 me-3 text-center" style="width: 50px; height: 50px;">
                                 <i class="bi bi-person-fill text-muted"></i>
@@ -404,12 +420,29 @@
                 },
                 body: formData
             })
-            .then(res => res.json())
+            .then(async response => {
+                const text = await response.text();
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server response was not JSON:', text);
+                    throw new Error('Error en el formato de respuesta del servidor');
+                }
+            })
             .then(data => {
+                // Actualizar token CSRF
+                if (data.csrf_name && data.csrf_hash) {
+                    const meta = document.getElementById('csrf-token');
+                    if (meta) {
+                        meta.name = data.csrf_name;
+                        meta.content = data.csrf_hash;
+                    }
+                }
+
                 if (data.success) {
                     window.location.href = BASE_URL + 'checkout';
                 } else {
-                    // Show Error Toast (reusing header toast if available, or alert)
+                    // Show Error Toast
                     const errorToastBody = document.getElementById('errorToastBody');
                     if (errorToastBody) {
                         errorToastBody.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>' + (data.message || 'Error al procesar compra');
@@ -423,7 +456,10 @@
                     }
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error inesperado al procesar la compra');
+            });
     }
 </script>
 

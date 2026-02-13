@@ -146,7 +146,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-dark">Gs. <?= number_format($ped['total'], 0) ?></span>
+                                    <span class="fw-bold text-dark"><?= formato_moneda($ped['total']) ?></span>
                                 </td>
                                 <td>
                                     <a href="<?= base_url('mis-pedidos/ver/' . $ped['codigo']) ?>" class="btn-action" title="Ver detalles">

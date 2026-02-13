@@ -517,10 +517,10 @@
                                     <div class="product-price-section">
                                         <div class="price-wrap">
                                             <?php if ($prod['precio_oferta']): ?>
-                                                <span class="price-current">Gs. <?= number_format($prod['precio_oferta'], 0, ',', '.') ?></span>
-                                                <span class="price-old">Gs. <?= number_format($prod['precio'], 0, ',', '.') ?></span>
+                                                <span class="price-current"><?= formato_moneda($prod['precio_oferta']) ?></span>
+                                                <span class="price-old"><?= formato_moneda($prod['precio']) ?></span>
                                             <?php else: ?>
-                                                <span class="price-current">Gs. <?= number_format($prod['precio'], 0, ',', '.') ?></span>
+                                                <span class="price-current"><?= formato_moneda($prod['precio']) ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <div class="text-warning small">

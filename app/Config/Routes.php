@@ -27,9 +27,19 @@ $routes->group('', ['namespace' => 'App\Controllers\Tienda'], function ($routes)
     $routes->post('checkout/procesar', 'Checkout::procesar', ['filter' => 'auth']);
     $routes->get('checkout/confirmacion/(:segment)', 'Checkout::confirmacion/$1', ['filter' => 'auth']);
 
-    // Pedidos del cliente
+    // Mis pedidos y direcciones
     $routes->get('mis-pedidos', 'Pedidos::index', ['filter' => 'auth']);
     $routes->get('mis-pedidos/ver/(:segment)', 'Pedidos::ver/$1', ['filter' => 'auth']);
+
+    // Perfil
+    $routes->get('perfil', 'Perfil::index', ['filter' => 'auth']);
+    $routes->post('perfil/actualizar', 'Perfil::actualizar', ['filter' => 'auth']);
+    $routes->post('perfil/cambiar-password', 'Perfil::cambiarPassword', ['filter' => 'auth']);
+
+    // Direcciones
+    $routes->post('direcciones/guardar', 'Direcciones::guardar', ['filter' => 'auth']);
+    $routes->post('direcciones/actualizar/(:num)', 'Direcciones::actualizar/$1', ['filter' => 'auth']);
+    $routes->post('direcciones/eliminar/(:num)', 'Direcciones::eliminar/$1', ['filter' => 'auth']);
 });
 
 // Autenticación

@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-md-6 text-md-start">
                             <p class="mb-1 text-muted">Total:</p>
-                            <h4>Gs. <?= number_format($pedido['total'], 0) ?></h4>
+                            <h4><?= formato_moneda($pedido['total']) ?></h4>
                         </div>
                     </div>
                     <hr>

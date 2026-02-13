@@ -44,8 +44,9 @@
         <aside class="left-sidebar">
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="<?= base_url('admin/dashboard') ?>" class="text-nowrap logo-img">
-                        <img src="<?= base_url('assets/images/logos/logo.svg') ?>" width="180" alt="" />
+                    <a href="<?= base_url('admin/dashboard') ?>" class="text-nowrap logo-img d-flex align-items-center gap-2 text-decoration-none">
+                        <i class="ti ti-building-store fs-7" style="color: #0d6efd;"></i>
+                        <span class="fw-bolder fs-6 text-dark" style="letter-spacing: -0.5px;">MiniMarket</span>
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>

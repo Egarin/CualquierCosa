@@ -42,20 +42,20 @@
                                         </div>
                                     </td>
                                     <td class="text-center"><?= $det['cantidad'] ?></td>
-                                    <td class="text-end">Gs. <?= number_format($det['precio_unitario'], 0) ?></td>
-                                    <td class="text-end">Gs. <?= number_format($det['subtotal'], 0) ?></td>
+                                    <td class="text-end"><?= formato_moneda($det['precio_unitario']) ?></td>
+                                    <td class="text-end"><?= formato_moneda($det['subtotal']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot class="table-group-divider">
                             <tr>
                                 <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
-                                <td class="text-end">Gs. <?= number_format($pedido['subtotal'], 0) ?></td>
+                                <td class="text-end"><?= formato_moneda($pedido['subtotal']) ?></td>
                             </tr>
                             <?php if ($pedido['costo_envio'] > 0): ?>
                                 <tr>
                                     <td colspan="3" class="text-end"><strong>Envío:</strong></td>
-                                    <td class="text-end">Gs. <?= number_format($pedido['costo_envio'], 0) ?></td>
+                                    <td class="text-end"><?= formato_moneda($pedido['costo_envio']) ?></td>
                                 </tr>
                             <?php endif; ?>
                             <tr>
@@ -63,7 +63,7 @@
                                     <h5 class="mb-0">Total:</h5>
                                 </td>
                                 <td class="text-end">
-                                    <h5 class="mb-0 text-primary">Gs. <?= number_format($pedido['total'], 0) ?></h5>
+                                    <h5 class="mb-0 text-primary"><?= formato_moneda($pedido['total']) ?></h5>
                                 </td>
                             </tr>
                         </tfoot>

@@ -205,6 +205,7 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                 <?php endif; ?>
+                                <li><a class="dropdown-item" href="<?= base_url('perfil') ?>"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
                                 <li><a class="dropdown-item" href="<?= base_url('mis-pedidos') ?>"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
@@ -229,7 +230,7 @@
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert">
             <div class="d-flex">
-                <div class="toast-body">
+                <div class="toast-body" id="liveToastBody">
                     <i class="bi bi-check-circle me-2"></i>Producto agregado al carrito
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -284,52 +285,80 @@
                     },
                     body: formData
                 })
-                .then(response => {
-                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
-                    return response.json();
+                .then(async response => {
+                    const text = await response.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('Server response was not JSON:', text);
+                        throw new Error('Error en el formato de respuesta del servidor');
+                    }
                 })
                 .then(data => {
+                    // Actualizar token CSRF si viene en la respuesta
+                    if (data.csrf_name && data.csrf_hash) {
+                        const meta = document.getElementById('csrf-token');
+                        if (meta) {
+                            meta.name = data.csrf_name;
+                            meta.content = data.csrf_hash;
+                        }
+                    }
+
                     if (data.success) {
                         const cartCount = document.getElementById('cart-count');
                         if (cartCount) cartCount.textContent = data.contador;
-
-                        const toastEl = document.getElementById('liveToast');
-                        if (toastEl) {
-                            const toast = new bootstrap.Toast(toastEl);
-                            toast.show();
-                        }
+                        showToast('Producto agregado al carrito');
                     } else {
-                        // Show Error Toast
-                        const errorToastBody = document.getElementById('errorToastBody');
-                        if (errorToastBody) errorToastBody.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>' + (data.message || 'Error al agregar al carrito');
-
-                        const errorToastEl = document.getElementById('errorToast');
-                        if (errorToastEl) {
-                            const toast = new bootstrap.Toast(errorToastEl);
-                            toast.show();
-                        }
+                        showToast(data.message || 'Error al agregar al carrito', 'error');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    showToast('Error inesperado', 'error');
                 });
         }
 
         function actualizarContadorCarrito() {
             fetch(BASE_URL + 'carrito/contador')
-                .then(response => response.text())
-                .then(text => {
+                .then(async response => {
+                    const text = await response.text();
                     try {
-                        const data = JSON.parse(text);
-                        const cartCount = document.getElementById('cart-count');
-                        if (cartCount) cartCount.textContent = data.contador || 0;
+                        return JSON.parse(text);
                     } catch (e) {
-                        // Silenciar error si no es JSON válido
+                        if (text.includes('<!DOCTYPE html>')) {
+                            console.error('El servidor devolvió HTML en lugar de JSON para el contador.');
+                        } else {
+                            console.error('Error al parsear contador:', e, 'Response text:', text);
+                        }
+                        return {
+                            contador: 0
+                        };
                     }
                 })
+                .then(data => {
+                    const cartCount = document.getElementById('cart-count');
+                    if (cartCount) cartCount.textContent = data.contador || 0;
+                })
                 .catch(error => {
-                    // Silenciar error de conexión
+                    console.error('Error de conexión al contador:', error);
                 });
+        }
+
+        function showToast(mensaje, tipo = 'success') {
+            const toastId = tipo === 'success' ? 'liveToast' : 'errorToast';
+            const bodyId = tipo === 'success' ? 'liveToastBody' : 'errorToastBody';
+            const icon = tipo === 'success' ? 'bi-check-circle' : 'bi-exclamation-circle';
+
+            const body = document.getElementById(bodyId);
+            if (body) {
+                body.innerHTML = `<i class="bi ${icon} me-2"></i>${mensaje}`;
+            }
+
+            const toastEl = document.getElementById(toastId);
+            if (toastEl) {
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
         }
     </script>
 </body>

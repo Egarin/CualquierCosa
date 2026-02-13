@@ -38,10 +38,10 @@
 
                             <div class="d-flex align-items-center mb-3">
                                 <?php if ($prod['precio_oferta']): ?>
-                                    <span class="price-original me-2">Gs. <?= number_format($prod['precio'], 0) ?></span>
-                                    <span class="price-tag">Gs. <?= number_format($prod['precio_oferta'], 0) ?></span>
+                                    <span class="price-original me-2"><?= formato_moneda($prod['precio']) ?></span>
+                                    <span class="price-tag"><?= formato_moneda($prod['precio_oferta']) ?></span>
                                 <?php else: ?>
-                                    <span class="price-tag">Gs. <?= number_format($prod['precio'], 0) ?></span>
+                                    <span class="price-tag"><?= formato_moneda($prod['precio']) ?></span>
                                 <?php endif; ?>
                             </div>
 

@@ -43,7 +43,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="text-center">Gs. <?= number_format($precio, 0) ?></td>
+                                            <td class="text-center"><?= formato_moneda($precio) ?></td>
                                             <td>
                                                 <div class="input-group input-group-sm">
                                                     <button class="btn btn-outline-secondary" type="button" onclick="actualizarCantidad(<?= $item['id'] ?>, <?= $item['cantidad'] - 1 ?>)">-</button>
@@ -51,7 +51,7 @@
                                                     <button class="btn btn-outline-secondary" type="button" onclick="actualizarCantidad(<?= $item['id'] ?>, <?= $item['cantidad'] + 1 ?>)">+</button>
                                                 </div>
                                             </td>
-                                            <td class="text-end fw-bold">Gs. <?= number_format($subtotal, 0) ?></td>
+                                            <td class="text-end fw-bold"><?= formato_moneda($subtotal) ?></td>
                                             <td class="text-end">
                                                 <button class="btn btn-link text-danger" onclick="eliminarItem(<?= $item['id'] ?>)">
                                                     <i class="bi bi-trash"></i>
@@ -79,7 +79,7 @@
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal</span>
-                            <span class="fw-bold">Gs. <?= number_format($total, 0) ?></span>
+                            <span class="fw-bold"><?= formato_moneda($total) ?></span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Envío</span>
@@ -90,7 +90,7 @@
 
                         <div class="d-flex justify-content-between mb-4">
                             <span class="h5">Total</span>
-                            <span class="h5 text-primary">Gs. <?= number_format($total, 0) ?></span>
+                            <span class="h5 text-primary"><?= formato_moneda($total) ?></span>
                         </div>
 
                         <a href="<?= base_url('checkout') ?>" class="btn btn-primary w-100 btn-lg">
@@ -110,6 +110,7 @@
         const formData = new FormData();
         formData.append('item_id', itemId);
         formData.append('cantidad', cantidad);
+        formData.append(CSRF_TOKEN, getCsrfHash());
 
         fetch('<?= base_url('carrito/actualizar') ?>', {
                 method: 'POST',
@@ -118,13 +119,34 @@
                 },
                 body: formData
             })
-            .then(response => response.json())
+            .then(async response => {
+                const text = await response.text();
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server response was not JSON:', text);
+                    throw new Error('Error en el formato de respuesta del servidor');
+                }
+            })
             .then(data => {
+                // Actualizar token CSRF
+                if (data.csrf_name && data.csrf_hash) {
+                    const meta = document.getElementById('csrf-token');
+                    if (meta) {
+                        meta.name = data.csrf_name;
+                        meta.content = data.csrf_hash;
+                    }
+                }
+
                 if (data.success) {
                     location.reload();
                 } else {
                     alert(data.message || 'Error al actualizar');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error inesperado al actualizar la cantidad');
             });
     }
 
@@ -133,6 +155,7 @@
 
         const formData = new FormData();
         formData.append('item_id', itemId);
+        formData.append(CSRF_TOKEN, getCsrfHash());
 
         fetch('<?= base_url('carrito/eliminar') ?>', {
                 method: 'POST',
@@ -141,11 +164,32 @@
                 },
                 body: formData
             })
-            .then(response => response.json())
+            .then(async response => {
+                const text = await response.text();
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server response was not JSON:', text);
+                    throw new Error('Error en el formato de respuesta del servidor');
+                }
+            })
             .then(data => {
+                // Actualizar token CSRF
+                if (data.csrf_name && data.csrf_hash) {
+                    const meta = document.getElementById('csrf-token');
+                    if (meta) {
+                        meta.name = data.csrf_name;
+                        meta.content = data.csrf_hash;
+                    }
+                }
+
                 if (data.success) {
                     location.reload();
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error inesperado al eliminar el producto');
             });
     }
 </script>

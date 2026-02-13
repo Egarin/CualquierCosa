@@ -265,10 +265,10 @@
                                     <div class="d-flex align-items-center justify-content-between mt-2">
                                         <div>
                                             <?php if ($prod['precio_oferta']): ?>
-                                                <span class="mat-product-price">Gs. <?= number_format($prod['precio_oferta'], 0) ?></span>
-                                                <span class="mat-product-price-old">Gs. <?= number_format($prod['precio'], 0) ?></span>
+                                                <span class="mat-product-price"><?= formato_moneda($prod['precio_oferta']) ?></span>
+                                                <span class="mat-product-price-old"><?= formato_moneda($prod['precio']) ?></span>
                                             <?php else: ?>
-                                                <span class="mat-product-price">Gs. <?= number_format($prod['precio'], 0) ?></span>
+                                                <span class="mat-product-price"><?= formato_moneda($prod['precio']) ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <div class="rating-stars">

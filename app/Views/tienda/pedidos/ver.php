@@ -124,8 +124,8 @@
                             </div>
 
                             <div class="text-end">
-                                <div class="fw-bold text-dark">Gs. <?= number_format($det['subtotal'], 0) ?></div>
-                                <small class="text-muted">Gs. <?= number_format($det['precio_unitario'], 0) ?> c/u</small>
+                                <div class="fw-bold text-dark"><?= formato_moneda($det['subtotal']) ?></div>
+                                <small class="text-muted"><?= formato_moneda($det['precio_unitario']) ?> c/u</small>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -134,17 +134,17 @@
                 <div class="mt-4 pt-3 border-top border-light">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal</span>
-                        <span class="fw-bold text-dark">Gs. <?= number_format($pedido['subtotal'], 0) ?></span>
+                        <span class="fw-bold text-dark"><?= formato_moneda($pedido['subtotal']) ?></span>
                     </div>
                     <?php if ($pedido['costo_envio'] > 0): ?>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Envío</span>
-                            <span class="fw-bold text-dark">Gs. <?= number_format($pedido['costo_envio'], 0) ?></span>
+                            <span class="fw-bold text-dark"><?= formato_moneda($pedido['costo_envio']) ?></span>
                         </div>
                     <?php endif; ?>
                     <div class="d-flex justify-content-between mt-3 pt-3 border-top border-light">
                         <span class="fs-5 fw-bold text-dark">Total</span>
-                        <span class="fs-5 fw-bold text-primary">Gs. <?= number_format($pedido['total'], 0) ?></span>
+                        <span class="fs-5 fw-bold text-primary"><?= formato_moneda($pedido['total']) ?></span>
                     </div>
                 </div>
             </div>

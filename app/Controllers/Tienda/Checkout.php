@@ -63,7 +63,7 @@ class Checkout extends BaseController
         // Validar
         $rules = [
             'tipo_envio' => 'required|in_list[delivery,pickup]',
-            'metodo_pago' => 'required|in_list[efectivo,tarjeta,transferencia,yape,plin]'
+            'metodo_pago' => 'required|in_list[efectivo,tarjeta,transferencia,qr]'
         ];
 
         if ($this->request->getPost('tipo_envio') === 'delivery') {
@@ -93,7 +93,8 @@ class Checkout extends BaseController
             'estado' => 'pendiente'
         ];
 
-        $this->db->transStart();
+        $db = \Config\Database::connect();
+        $db->transStart();
 
         $pedidoId = $this->pedidoModel->insert($pedidoData);
 
@@ -118,9 +119,9 @@ class Checkout extends BaseController
         // Vaciar carrito
         $this->carritoModel->vaciarCarrito($usuarioId, $sessionId);
 
-        $this->db->transComplete();
+        $db->transComplete();
 
-        if ($this->db->transStatus() === false) {
+        if ($db->transStatus() === false) {
             return redirect()->back()->with('error', 'Error al procesar el pedido');
         }
 

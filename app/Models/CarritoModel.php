@@ -17,26 +17,30 @@ class CarritoModel extends Model
         $builder = $this->db->table($this->table . ' c');
         $builder->select('c.*, p.nombre, p.precio, p.precio_oferta, p.imagen, p.stock, p.slug, p.unidad');
         $builder->join('productos p', 'p.id = c.producto_id');
-        
+
         if ($usuarioId) {
             $builder->where('c.usuario_id', $usuarioId);
         } else {
             $builder->where('c.session_id', $sessionId);
+            $builder->where('c.usuario_id', null);
         }
-        
+
         return $builder->get()->getResultArray();
     }
 
     // Agregar o actualizar item
     public function agregarItem($data)
     {
-        // Buscar si ya existe
-        $existente = $this->where('producto_id', $data['producto_id'])
-                         ->groupStart()
-                             ->where('usuario_id', $data['usuario_id'] ?? null)
-                             ->orWhere('session_id', $data['session_id'] ?? null)
-                         ->groupEnd()
-                         ->first();
+        // Buscar si ya existe específicamente para este usuario o sesión
+        $this->where('producto_id', $data['producto_id']);
+
+        if (!empty($data['usuario_id'])) {
+            $this->where('usuario_id', $data['usuario_id']);
+        } else {
+            $this->where('session_id', $data['session_id']);
+        }
+
+        $existente = $this->first();
 
         if ($existente) {
             // Actualizar cantidad
@@ -61,7 +65,7 @@ class CarritoModel extends Model
     public function migrarASesionUsuario($sessionId, $usuarioId)
     {
         $items = $this->where('session_id', $sessionId)->findAll();
-        
+
         foreach ($items as $item) {
             $this->agregarItem([
                 'usuario_id' => $usuarioId,
@@ -69,7 +73,7 @@ class CarritoModel extends Model
                 'cantidad' => $item['cantidad']
             ]);
         }
-        
+
         return $this->where('session_id', $sessionId)->delete();
     }
 
@@ -77,13 +81,14 @@ class CarritoModel extends Model
     public function contarItems($usuarioId = null, $sessionId = null)
     {
         $builder = $this->db->table($this->table);
-        
+
         if ($usuarioId) {
             $builder->where('usuario_id', $usuarioId);
         } else {
             $builder->where('session_id', $sessionId);
+            $builder->where('usuario_id', null);
         }
-        
+
         return $builder->countAllResults();
     }
 
@@ -92,12 +97,12 @@ class CarritoModel extends Model
     {
         $items = $this->getCarrito($usuarioId, $sessionId);
         $total = 0;
-        
+
         foreach ($items as $item) {
             $precio = $item['precio_oferta'] ?? $item['precio'];
             $total += $precio * $item['cantidad'];
         }
-        
+
         return $total;
     }
 }
